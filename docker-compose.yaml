@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: postgres.pismo-transactions.dev
+    image: postgres:latest
+    env_file: .env
+    environment:
+      POSTGRES_DB: $DATABASE_NAME
+      POSTGRES_USER: $DATABASE_USERNAME
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+    volumes:
+      - postgres_pismo_data:/data/postgres
+    ports:
+      - 5432:5432
+    networks:
+      - pismo_transactions
+  app:
+    container_name: app.pismo-transactions.dev
+    env_file: .env
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - pismo_transactions
+
+volumes:
+  postgres_pismo_data:
+
+networks:
+  pismo_transactions:
+
