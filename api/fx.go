@@ -18,7 +18,6 @@ func createApp(o ...fx.Option) *fx.App {
 			newConfig,
 			newLogger,
 			newConnection,
-			newApi,
 			newAccountHandler,
 			newAccountService,
 
@@ -47,10 +46,6 @@ func newConnection(cfg config.Config) (*gorm.DB, error) {
 
 func newAccountHandler(s *account.Service, l *slog.Logger) *handler.AccountHandler {
 	return handler.NewAccountHandler(s, l)
-}
-
-func newApi(args ApiArgs) *Api {
-	return NewApi(args)
 }
 
 func newAccountService(r account.RepositoryInterface) *account.Service {

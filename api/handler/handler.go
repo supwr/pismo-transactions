@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"github.com/go-playground/validator/v10"
 	"strings"
 )
+
+var ErrCreateAccount = errors.New("Error creating account")
 
 type Validation struct {
 	Errors []Field

@@ -1,0 +1,59 @@
+definitions:
+  handler.AccountInputDTO:
+    properties:
+      document_number:
+        type: string
+    required:
+    - document_number
+    type: object
+info:
+  contact: {}
+  title: Transactions API
+  version: "1.0"
+paths:
+  /accounts:
+    post:
+      consumes:
+      - application/json
+      description: Add new account
+      parameters:
+      - description: Account properties
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.AccountInputDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create account
+      tags:
+      - Accounts
+  /accounts/{accountId}:
+    get:
+      description: Get account by id
+      parameters:
+      - description: Account id
+        in: path
+        name: accountId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Show account details
+      tags:
+      - Accounts
+swagger: "2.0"

@@ -10,6 +10,10 @@ import (
 	"strconv"
 )
 
+type AccountInputDTO struct {
+	DocumentNumber entity.Document `json:"document_number" swaggertype:"string" validate:"required"`
+}
+
 type AccountHandler struct {
 	AccountService *account.Service
 	logger         *slog.Logger
@@ -22,11 +26,20 @@ func NewAccountHandler(service *account.Service, logger *slog.Logger) *AccountHa
 	}
 }
 
+// CreateAccount godoc
+// @Summary      Create account
+// @Description  Add new account
+// @Tags         Accounts
+// @Accept       json
+// @Produce      json
+// @Param        request   body      AccountInputDTO  true  "Account properties"
+// @Success      201
+// @Failure      500
+// @Failure      400
+// @Router       /accounts [post]
 func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 	var err error
-	var input struct {
-		DocumentNumber entity.Document `json:"document_number" validate:"required"`
-	}
+	var input AccountInputDTO
 
 	if err = ctx.BindJSON(&input); err != nil {
 		h.logger.Error("error reading body", slog.Any("error", err))
@@ -62,6 +75,16 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 	return
 }
 
+// GetAccountById godoc
+// @Summary      Show account details
+// @Description  Get account by id
+// @Tags         Accounts
+// @Produce      json
+// @Param        accountId   path      integer  true  "Account id"
+// @Success      200
+// @Failure      500
+// @Failure      404
+// @Router       /accounts/{accountId} [get]
 func (h *AccountHandler) GetAccountById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("accountId"))
 	if err != nil {
