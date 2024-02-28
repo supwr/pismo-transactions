@@ -4,8 +4,10 @@ import (
 	"github.com/supwr/pismo-transactions/api/handler"
 	"github.com/supwr/pismo-transactions/config"
 	"github.com/supwr/pismo-transactions/infrastructure/database"
-	accountrepository "github.com/supwr/pismo-transactions/infrastructure/repository"
+	"github.com/supwr/pismo-transactions/infrastructure/repository"
 	"github.com/supwr/pismo-transactions/usecase/account"
+	"github.com/supwr/pismo-transactions/usecase/operation_type"
+	"github.com/supwr/pismo-transactions/usecase/transaction"
 	"go.uber.org/fx"
 	"gorm.io/gorm"
 	"log/slog"
@@ -18,13 +20,28 @@ func createApp(o ...fx.Option) *fx.App {
 			newConfig,
 			newLogger,
 			newConnection,
+
+			//handlers
 			newAccountHandler,
+			newTransactionHandler,
+
+			//services
+			newOperationTypeService,
 			newAccountService,
+			newTransactionService,
 
 			// repositories
 			fx.Annotate(
-				accountrepository.NewAccountAccountRepository,
+				repository.NewAccountRepository,
 				fx.As(new(account.RepositoryInterface)),
+			),
+			fx.Annotate(
+				repository.NewOperationTypeRepository,
+				fx.As(new(operation_type.RepositoryInterface)),
+			),
+			fx.Annotate(
+				repository.NewTransactionRepository,
+				fx.As(new(transaction.RepositoryInterface)),
 			),
 		),
 	}
@@ -48,6 +65,18 @@ func newAccountHandler(s *account.Service, l *slog.Logger) *handler.AccountHandl
 	return handler.NewAccountHandler(s, l)
 }
 
+func newTransactionHandler(s *transaction.Service, l *slog.Logger) *handler.TransactionHandler {
+	return handler.NewTransactionHandler(s, l)
+}
+
 func newAccountService(r account.RepositoryInterface) *account.Service {
 	return account.NewService(r)
+}
+
+func newOperationTypeService(r operation_type.RepositoryInterface) *operation_type.Service {
+	return operation_type.NewService(r)
+}
+
+func newTransactionService(r transaction.RepositoryInterface, o *operation_type.Service, a *account.Service) *transaction.Service {
+	return transaction.NewService(r, o, a)
 }

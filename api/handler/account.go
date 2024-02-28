@@ -19,10 +19,10 @@ type AccountHandler struct {
 	logger         *slog.Logger
 }
 
-func NewAccountHandler(service *account.Service, logger *slog.Logger) *AccountHandler {
+func NewAccountHandler(s *account.Service, l *slog.Logger) *AccountHandler {
 	return &AccountHandler{
-		AccountService: service,
-		logger:         logger,
+		AccountService: s,
+		logger:         l,
 	}
 }
 
@@ -60,7 +60,7 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 		h.logger.Error("error creating account", slog.Any("error", err))
 		if errors.Is(err, account.ErrAccountAlreadyExists) {
 			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": account.ErrAccountAlreadyExists.Error(),
+				"error": err.Error(),
 			})
 			return
 		}

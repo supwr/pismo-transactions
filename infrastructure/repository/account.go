@@ -12,7 +12,7 @@ type AccountRepository struct {
 	logger *slog.Logger
 }
 
-func NewAccountAccountRepository(db *gorm.DB, logger *slog.Logger) *AccountRepository {
+func NewAccountRepository(db *gorm.DB, logger *slog.Logger) *AccountRepository {
 	return &AccountRepository{
 		db:     db,
 		logger: logger,
@@ -26,7 +26,7 @@ func (r *AccountRepository) Create(account *entity.Account) error {
 func (r *AccountRepository) FindById(id int) (*entity.Account, error) {
 	var account *entity.Account
 
-	if err := r.db.First(&account, "id = ?", id).Error; err != nil {
+	if err := r.db.First(&account, "id = ? and deleted_at is null", id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -41,7 +41,7 @@ func (r *AccountRepository) FindById(id int) (*entity.Account, error) {
 func (r *AccountRepository) FindByDocument(document entity.Document) (*entity.Account, error) {
 	var account *entity.Account
 
-	if err := r.db.First(&account, "document = ?", document).Error; err != nil {
+	if err := r.db.First(&account, "document = ? and deleted_at is null", document).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
