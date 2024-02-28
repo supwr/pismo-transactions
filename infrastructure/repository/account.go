@@ -19,7 +19,7 @@ func NewAccountAccountRepository(db *gorm.DB, logger *slog.Logger) *AccountRepos
 	}
 }
 
-func (r *AccountRepository) Create(account entity.Account) error {
+func (r *AccountRepository) Create(account *entity.Account) error {
 	return r.db.Create(account).Error
 }
 

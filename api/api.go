@@ -31,6 +31,7 @@ func (a *Api) Serve() {
 
 	// routes
 	app.GET("/accounts/:accountId", a.accountHandler.GetAccountById)
+	app.POST("/accounts", a.accountHandler.CreateAccount)
 
 	app.Run()
 }

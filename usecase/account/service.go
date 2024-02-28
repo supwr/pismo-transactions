@@ -1,7 +1,6 @@
 package account
 
 import (
-	"errors"
 	"github.com/supwr/pismo-transactions/entity"
 )
 
@@ -17,14 +16,18 @@ func (s *Service) FindById(id int) (*entity.Account, error) {
 	return s.repository.FindById(id)
 }
 
-func (s *Service) Create(account entity.Account) error {
+func (s *Service) FindByDocument(document entity.Document) (*entity.Account, error) {
+	return s.repository.FindByDocument(document)
+}
+
+func (s *Service) Create(account *entity.Account) error {
 	exists, err := s.repository.FindByDocument(account.Document)
 	if err != nil {
 		return err
 	}
 
 	if exists != nil {
-		return errors.New("There's already an account with this document")
+		return ErrAccountAlreadyExists
 	}
 
 	if err = s.repository.Create(account); err != nil {
