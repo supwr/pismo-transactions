@@ -66,7 +66,7 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 		}
 
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": ErrCreateAccount,
+			"error": ErrCreateAccount.Error(),
 		})
 		return
 	}
@@ -96,10 +96,9 @@ func (h *AccountHandler) GetAccountById(ctx *gin.Context) {
 	}
 
 	acc, err := h.AccountService.FindById(id)
-
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}

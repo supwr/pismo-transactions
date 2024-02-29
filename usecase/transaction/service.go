@@ -35,5 +35,11 @@ func (s *Service) Create(t *entity.Transaction) error {
 		return ErrOperationTypeNotFound
 	}
 
+	if t.OperationTypeID < 4 {
+		t.Amount = t.Amount.Abs().Neg()
+	} else {
+		t.Amount = t.Amount.Abs()
+	}
+
 	return s.repository.Create(t)
 }

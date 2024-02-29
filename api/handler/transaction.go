@@ -72,7 +72,7 @@ func (h *TransactionHandler) CreateTransaction(ctx *gin.Context) {
 		}
 
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": ErrCreateTransaction,
+			"error": ErrCreateTransaction.Error(),
 		})
 		return
 	}

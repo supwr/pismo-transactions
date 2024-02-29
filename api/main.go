@@ -16,12 +16,13 @@ func main() {
 	decimal.MarshalJSONWithoutQuotes = true
 
 	app := createApp(
-		fx.Invoke(func(accountHandler *handler.AccountHandler) {
+		fx.Invoke(func(accountHandler *handler.AccountHandler, transactionHandler *handler.TransactionHandler) {
 			api := gin.Default()
 
 			// routes
 			api.GET("/accounts/:accountId", accountHandler.GetAccountById)
 			api.POST("/accounts", accountHandler.CreateAccount)
+			api.POST("/transactions", transactionHandler.CreateTransaction)
 			api.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 			api.Run()

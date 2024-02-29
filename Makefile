@@ -14,7 +14,7 @@ infra.stop:
 	docker-compose stop db
 
 migrate:
-	docker-compose run app go run /app/cmd/.
+	docker run --rm --network pismo-transactions_pismo_transactions --env-file .env pismo-transactions-app go run /app/cmd/.
 
 swagger:
-	docker-compose run app swag init -d /app/api/
+	docker run --rm -v .:/app pismo-transactions-app swag init -d /app/api/
