@@ -18,3 +18,6 @@ migrate:
 
 swagger:
 	docker run --rm -v .:/app pismo-transactions-app swag init -d /app/api/
+
+generate:
+	docker run --rm -v .:/app pismo-transactions-app go generate ./...

@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=mock/interface.go -source=interface.go -package=mock
 package account
 
 import "github.com/supwr/pismo-transactions/entity"

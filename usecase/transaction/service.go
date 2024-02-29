@@ -4,6 +4,8 @@ import (
 	"github.com/supwr/pismo-transactions/entity"
 	"github.com/supwr/pismo-transactions/usecase/account"
 	"github.com/supwr/pismo-transactions/usecase/operation_type"
+	"slices"
+	"time"
 )
 
 type Service struct {
@@ -17,6 +19,8 @@ func NewService(r RepositoryInterface, o *operation_type.Service, a *account.Ser
 }
 
 func (s *Service) Create(t *entity.Transaction) error {
+	var negAmountTransactions = []int{entity.OperationTypeCashBuy, entity.OperationTypeInstallmentBuy, entity.OperationTypeWithdraw}
+
 	acc, err := s.accountService.FindById(t.AccountID)
 	if err != nil {
 		return err
@@ -35,11 +39,13 @@ func (s *Service) Create(t *entity.Transaction) error {
 		return ErrOperationTypeNotFound
 	}
 
-	if t.OperationTypeID < 4 {
+	if slices.Contains(negAmountTransactions, t.OperationTypeID) {
 		t.Amount = t.Amount.Abs().Neg()
 	} else {
 		t.Amount = t.Amount.Abs()
 	}
+
+	t.OperationDate = time.Now()
 
 	return s.repository.Create(t)
 }
