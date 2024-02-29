@@ -6,8 +6,10 @@ import (
 	"strings"
 )
 
-var ErrCreateAccount = errors.New("Error creating account")
-var ErrCreateTransaction = errors.New("Error creating transaction")
+var (
+	ErrCreateAccount     = errors.New("Error creating account")
+	ErrCreateTransaction = errors.New("Error creating transaction")
+)
 
 type Validation struct {
 	Errors []Field

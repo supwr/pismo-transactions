@@ -21,3 +21,9 @@ swagger:
 
 generate:
 	docker run --rm -v .:/app pismo-transactions-app go generate ./...
+
+test:
+	docker run --rm -v .:/app pismo-transactions-app go test -v ./...
+
+test-coverage:
+	docker run --rm -v .:/app pismo-transactions-app go test -coverprofile cover.out -v ./... && go tool cover -html=cover.out
