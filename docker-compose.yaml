@@ -35,4 +35,4 @@ volumes:
 
 networks:
   pismo_transactions:
-
+    external: true

@@ -1,4 +1,5 @@
 app.setup:
+	docker network create --driver bridge pismo_transactions || true
 	docker-compose build
 
 app.run:
@@ -14,7 +15,7 @@ db.stop:
 	docker-compose stop db
 
 migrate:
-	docker run --rm --network pismo-transactions_pismo_transactions --env-file .env pismo-transactions-app go run /app/cmd/.
+	docker run --rm --network pismo_transactions --env-file .env pismo-transactions-app go run /app/cmd/.
 
 swagger:
 	docker run --rm -v .:/app pismo-transactions-app swag init -d /app/api/
