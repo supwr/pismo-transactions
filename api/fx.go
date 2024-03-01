@@ -5,6 +5,7 @@ import (
 	"github.com/supwr/pismo-transactions/config"
 	"github.com/supwr/pismo-transactions/infrastructure/database"
 	"github.com/supwr/pismo-transactions/infrastructure/repository"
+	"github.com/supwr/pismo-transactions/pkg/clock"
 	"github.com/supwr/pismo-transactions/usecase/account"
 	"github.com/supwr/pismo-transactions/usecase/operation_type"
 	"github.com/supwr/pismo-transactions/usecase/transaction"
@@ -20,6 +21,7 @@ func createApp(o ...fx.Option) *fx.App {
 			newConfig,
 			newLogger,
 			newConnection,
+			newClock,
 
 			//handlers
 			newAccountHandler,
@@ -77,6 +79,10 @@ func newOperationTypeService(r operation_type.RepositoryInterface) *operation_ty
 	return operation_type.NewService(r)
 }
 
-func newTransactionService(r transaction.RepositoryInterface, o *operation_type.Service, a *account.Service) *transaction.Service {
-	return transaction.NewService(r, o, a)
+func newTransactionService(r transaction.RepositoryInterface, o *operation_type.Service, a *account.Service, c clock.Clock) *transaction.Service {
+	return transaction.NewService(r, o, a, c)
+}
+
+func newClock() clock.Clock {
+	return clock.NewClock()
 }

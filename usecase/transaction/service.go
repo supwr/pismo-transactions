@@ -2,20 +2,21 @@ package transaction
 
 import (
 	"github.com/supwr/pismo-transactions/entity"
+	"github.com/supwr/pismo-transactions/pkg/clock"
 	"github.com/supwr/pismo-transactions/usecase/account"
 	"github.com/supwr/pismo-transactions/usecase/operation_type"
 	"slices"
-	"time"
 )
 
 type Service struct {
 	repository           RepositoryInterface
 	operationTypeService *operation_type.Service
 	accountService       *account.Service
+	clock                clock.Clock
 }
 
-func NewService(r RepositoryInterface, o *operation_type.Service, a *account.Service) *Service {
-	return &Service{repository: r, operationTypeService: o, accountService: a}
+func NewService(r RepositoryInterface, o *operation_type.Service, a *account.Service, c clock.Clock) *Service {
+	return &Service{repository: r, operationTypeService: o, accountService: a, clock: c}
 }
 
 func (s *Service) Create(t *entity.Transaction) error {
@@ -45,7 +46,7 @@ func (s *Service) Create(t *entity.Transaction) error {
 		t.Amount = t.Amount.Abs()
 	}
 
-	t.OperationDate = time.Now()
+	t.OperationDate = s.clock.Now()
 
 	return s.repository.Create(t)
 }
