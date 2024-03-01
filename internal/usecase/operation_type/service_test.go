@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func Test_FindById(t *testing.T) {
+func TestService_FindById(t *testing.T) {
 	t.Run("find by id successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)

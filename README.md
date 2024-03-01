@@ -56,6 +56,12 @@ make app.run
 http://localhost:8000/swagger/index.html
 ```
 
+## Postman
+[Here](postman_collection.json) you can download the collection and import to the Postman client 
+
+## Architecture and design decisions
+
+
 ## Project structure
 
 ```

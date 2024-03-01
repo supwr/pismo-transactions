@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func Test_Create(t *testing.T) {
+func TestService_Create(t *testing.T) {
 	t.Run("create cash buy transaction successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		accountRepo := accountrepo.NewMockRepositoryInterface(ctrl)

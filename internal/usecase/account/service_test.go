@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func Test_FindById(t *testing.T) {
+func TestService_FindById(t *testing.T) {
 	t.Run("find by id successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
@@ -55,7 +55,7 @@ func Test_FindById(t *testing.T) {
 	})
 }
 
-func Test_FindByDocument(t *testing.T) {
+func TestService_FindByDocument(t *testing.T) {
 	t.Run("find by document successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
@@ -102,7 +102,7 @@ func Test_FindByDocument(t *testing.T) {
 	})
 }
 
-func Test_Create(t *testing.T) {
+func TestService_Create(t *testing.T) {
 	t.Run("create account successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
