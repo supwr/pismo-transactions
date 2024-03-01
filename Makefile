@@ -1,16 +1,16 @@
-setup.dev:
+app.setup:
 	docker-compose build
 
-dev.run:
+app.run:
 	docker-compose up app
 
-dev.stop:
+app.stop:
 	docker-compose stop app
 
-infra.up:
+db.up:
 	docker-compose up -d db
 
-infra.stop:
+db.stop:
 	docker-compose stop db
 
 migrate:
