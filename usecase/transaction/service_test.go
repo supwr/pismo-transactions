@@ -29,9 +29,11 @@ func Test_Create(t *testing.T) {
 			Document: "123456",
 		}
 
+		operationCashBuy := entity.OperationTypeCashBuy
+
 		operationType := &entity.OperationType{
-			ID:   entity.OperationTypeCashBuy,
-			Name: "COMPRA A VISTA",
+			ID:   operationCashBuy,
+			Name: entity.Operations[operationCashBuy],
 		}
 
 		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
@@ -40,7 +42,7 @@ func Test_Create(t *testing.T) {
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
 			AccountID:       1,
-			OperationTypeID: entity.OperationTypeCashBuy,
+			OperationTypeID: operationCashBuy,
 			Amount:          decimal.NewFromFloat(float64(123.45)).Neg(),
 			OperationDate:   transactionDate,
 		}
@@ -74,9 +76,11 @@ func Test_Create(t *testing.T) {
 			Document: "123456",
 		}
 
+		operationPayment := entity.OperationTypePayment
+
 		operationType := &entity.OperationType{
-			ID:   entity.OperationTypePayment,
-			Name: "PAGAMENTO",
+			ID:   operationPayment,
+			Name: entity.Operations[operationPayment],
 		}
 
 		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
@@ -85,7 +89,7 @@ func Test_Create(t *testing.T) {
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
 			AccountID:       1,
-			OperationTypeID: entity.OperationTypePayment,
+			OperationTypeID: operationPayment,
 			Amount:          decimal.NewFromFloat(float64(123.45)),
 			OperationDate:   transactionDate,
 		}
@@ -257,9 +261,11 @@ func Test_Create(t *testing.T) {
 			Document: "123456",
 		}
 
+		operationInstallmentBuy := entity.OperationTypeInstallmentBuy
+
 		operationType := &entity.OperationType{
-			ID:   entity.OperationTypeInstallmentBuy,
-			Name: "COMPRA PARCELADA",
+			ID:   operationInstallmentBuy,
+			Name: entity.Operations[operationInstallmentBuy],
 		}
 
 		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
@@ -268,7 +274,7 @@ func Test_Create(t *testing.T) {
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
 			AccountID:       1,
-			OperationTypeID: entity.OperationTypeInstallmentBuy,
+			OperationTypeID: operationInstallmentBuy,
 			Amount:          decimal.NewFromFloat(float64(657.89)).Neg(),
 			OperationDate:   transactionDate,
 		}
@@ -302,9 +308,11 @@ func Test_Create(t *testing.T) {
 			Document: "123456",
 		}
 
+		operationWithdraw := entity.OperationTypeWithdraw
+
 		operationType := &entity.OperationType{
-			ID:   entity.OperationTypeWithdraw,
-			Name: "SAQUE",
+			ID:   operationWithdraw,
+			Name: entity.Operations[operationWithdraw],
 		}
 
 		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
@@ -313,7 +321,7 @@ func Test_Create(t *testing.T) {
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
 			AccountID:       1,
-			OperationTypeID: entity.OperationTypeWithdraw,
+			OperationTypeID: operationWithdraw,
 			Amount:          decimal.NewFromFloat(float64(654.32)).Neg(),
 			OperationDate:   transactionDate,
 		}
