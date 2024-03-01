@@ -14,6 +14,11 @@ type AccountInputDTO struct {
 	DocumentNumber entity.Document `json:"document_number" swaggertype:"string" validate:"required"`
 }
 
+type AccountOutputDTO struct {
+	AccountID      int             `json:"account_id"`
+	DocumentNumber entity.Document `json:"document_number" swaggertype:"string"`
+}
+
 type AccountHandler struct {
 	AccountService *account.Service
 	logger         *slog.Logger
@@ -81,7 +86,7 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 // @Tags         Accounts
 // @Produce      json
 // @Param        accountId   path      integer  true  "Account id"
-// @Success      200
+// @Success      200 {object} AccountOutputDTO
 // @Failure      500
 // @Failure      404
 // @Router       /accounts/{accountId} [get]
@@ -108,5 +113,8 @@ func (h *AccountHandler) GetAccountById(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, acc)
+	ctx.JSON(http.StatusOK, AccountOutputDTO{
+		AccountID:      acc.ID,
+		DocumentNumber: acc.Document,
+	})
 }

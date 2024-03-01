@@ -6,6 +6,13 @@ definitions:
     required:
     - document_number
     type: object
+  handler.AccountOutputDTO:
+    properties:
+      account_id:
+        type: integer
+      document_number:
+        type: string
+    type: object
   handler.TransactionInputDTO:
     properties:
       account_id:
@@ -62,6 +69,8 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/handler.AccountOutputDTO'
         "404":
           description: Not Found
         "500":

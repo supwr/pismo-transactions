@@ -73,7 +73,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.AccountOutputDTO"
+                        }
                     },
                     "404": {
                         "description": "Not Found"
@@ -129,6 +132,17 @@ const docTemplate = `{
                 "document_number"
             ],
             "properties": {
+                "document_number": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.AccountOutputDTO": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
                 "document_number": {
                     "type": "string"
                 }
