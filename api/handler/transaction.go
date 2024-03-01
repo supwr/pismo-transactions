@@ -59,6 +59,7 @@ func (h *TransactionHandler) CreateTransaction(ctx *gin.Context) {
 	transact := &entity.Transaction{
 		AccountID:       input.AccountId,
 		OperationTypeID: input.OperationTypeId,
+		Amount:          input.Amount,
 	}
 
 	if err = h.transactionService.Create(transact); err != nil {
