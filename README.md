@@ -60,7 +60,13 @@ http://localhost:8000/swagger/index.html
 [Here](postman_collection.json) you can download the collection and import to the Postman client 
 
 ## Architecture and design decisions
+In order to facilitate the development cycle, it was chosen to use **[reflex](https://github.com/cespare/reflex)** on the dev Dockerfile. This way, any changes made to source code can be tested imediatelly, without the need to rebuild the application.
 
+With the intention to enable thorough testing and all the goodies of clean arch, the repositories and packages are referenced by their respective interfaces on the structs that make use of them. 
+
+The application is seperated in layers, this way any change in database, framework or any other external agent can be dealt with without major changes to the project.
+
+To make dependency injection easier, the project uses **[uber-fx](https://github.com/uber-go/fx)**.
 
 ## Project structure
 
