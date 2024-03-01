@@ -1,7 +1,7 @@
 package account
 
 import (
-	"github.com/supwr/pismo-transactions/entity"
+	"github.com/supwr/pismo-transactions/internal/entity"
 )
 
 type Service struct {

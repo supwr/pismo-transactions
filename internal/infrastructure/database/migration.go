@@ -7,7 +7,7 @@ import (
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/lib/pq"
-	"github.com/supwr/pismo-transactions/config"
+	"github.com/supwr/pismo-transactions/internal/config"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"gorm.io/gorm"

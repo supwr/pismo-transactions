@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	entity "github.com/supwr/pismo-transactions/entity"
+	entity "github.com/supwr/pismo-transactions/internal/entity"
 )
 
 // MockRepositoryInterface is a mock of RepositoryInterface interface.

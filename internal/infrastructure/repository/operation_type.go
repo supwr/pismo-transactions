@@ -2,7 +2,7 @@ package repository
 
 import (
 	"errors"
-	"github.com/supwr/pismo-transactions/entity"
+	"github.com/supwr/pismo-transactions/internal/entity"
 	"gorm.io/gorm"
 	"log/slog"
 )

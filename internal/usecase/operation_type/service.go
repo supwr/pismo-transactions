@@ -1,6 +1,6 @@
 package operation_type
 
-import "github.com/supwr/pismo-transactions/entity"
+import "github.com/supwr/pismo-transactions/internal/entity"
 
 type Service struct {
 	repository RepositoryInterface

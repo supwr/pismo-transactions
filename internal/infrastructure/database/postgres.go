@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/supwr/pismo-transactions/config"
+	"github.com/supwr/pismo-transactions/internal/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"

@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/shopspring/decimal"
-	"github.com/supwr/pismo-transactions/config"
-	"github.com/supwr/pismo-transactions/infrastructure/database"
+	"github.com/supwr/pismo-transactions/internal/config"
+	"github.com/supwr/pismo-transactions/internal/infrastructure/database"
 	"go.uber.org/fx"
 )
 

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
-	"github.com/supwr/pismo-transactions/entity"
-	"github.com/supwr/pismo-transactions/usecase/transaction"
+	"github.com/supwr/pismo-transactions/internal/entity"
+	"github.com/supwr/pismo-transactions/internal/usecase/transaction"
 	"log/slog"
 	"net/http"
 )

@@ -3,8 +3,8 @@ package handler
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/supwr/pismo-transactions/entity"
-	"github.com/supwr/pismo-transactions/usecase/account"
+	"github.com/supwr/pismo-transactions/internal/entity"
+	"github.com/supwr/pismo-transactions/internal/usecase/account"
 	"log/slog"
 	"net/http"
 	"strconv"

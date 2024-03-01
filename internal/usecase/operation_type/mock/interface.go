@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	entity "github.com/supwr/pismo-transactions/entity"
+	entity "github.com/supwr/pismo-transactions/internal/entity"
 )
 
 // MockRepositoryInterface is a mock of RepositoryInterface interface.
@@ -34,16 +34,17 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 	return m.recorder
 }
 
-// Create mocks base method.
-func (m *MockRepositoryInterface) Create(transaction *entity.Transaction) error {
+// FindById mocks base method.
+func (m *MockRepositoryInterface) FindById(id int) (*entity.OperationType, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", transaction)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "FindById", id)
+	ret0, _ := ret[0].(*entity.OperationType)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// Create indicates an expected call of Create.
-func (mr *MockRepositoryInterfaceMockRecorder) Create(transaction interface{}) *gomock.Call {
+// FindById indicates an expected call of FindById.
+func (mr *MockRepositoryInterfaceMockRecorder) FindById(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepositoryInterface)(nil).Create), transaction)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepositoryInterface)(nil).FindById), id)
 }

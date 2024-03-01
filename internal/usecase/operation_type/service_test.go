@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/supwr/pismo-transactions/entity"
-	"github.com/supwr/pismo-transactions/usecase/operation_type/mock"
+	"github.com/supwr/pismo-transactions/internal/entity"
+	"github.com/supwr/pismo-transactions/internal/usecase/operation_type/mock"
 	"testing"
 )
 

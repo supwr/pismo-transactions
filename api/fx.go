@@ -2,13 +2,15 @@ package main
 
 import (
 	"github.com/supwr/pismo-transactions/api/handler"
-	"github.com/supwr/pismo-transactions/config"
-	"github.com/supwr/pismo-transactions/infrastructure/database"
-	"github.com/supwr/pismo-transactions/infrastructure/repository"
+	"github.com/supwr/pismo-transactions/internal/config"
+	"github.com/supwr/pismo-transactions/internal/infrastructure/database"
+	"github.com/supwr/pismo-transactions/internal/infrastructure/repository"
+	"github.com/supwr/pismo-transactions/internal/usecase/account"
+	"github.com/supwr/pismo-transactions/internal/usecase/operation_type"
+	"github.com/supwr/pismo-transactions/internal/usecase/transaction"
+
 	"github.com/supwr/pismo-transactions/pkg/clock"
-	"github.com/supwr/pismo-transactions/usecase/account"
-	"github.com/supwr/pismo-transactions/usecase/operation_type"
-	"github.com/supwr/pismo-transactions/usecase/transaction"
+
 	"go.uber.org/fx"
 	"gorm.io/gorm"
 	"log/slog"
