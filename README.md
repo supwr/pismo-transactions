@@ -66,7 +66,7 @@ With the intention to enable thorough testing and all the goodies of clean arch,
 
 The application is seperated in layers, this way any change in database, framework or any other external agent can be dealt with without major changes to the project.
 
-To make dependency injection easier, the project uses **[uber-fx](https://github.com/uber-go/fx)**.
+As a dependency injection solution, the project uses **[uber-fx](https://github.com/uber-go/fx)**.
 
 ## Project structure
 
