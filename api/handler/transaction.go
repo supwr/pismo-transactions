@@ -44,14 +44,14 @@ func (h *TransactionHandler) CreateTransaction(ctx *gin.Context) {
 	var input TransactionInputDTO
 
 	if err = ctx.BindJSON(&input); err != nil {
-		h.logger.Error("error reading body", slog.Any("error", err))
+		h.logger.ErrorContext(ctx, "error reading body", slog.Any("error", err))
 		ctx.JSON(http.StatusInternalServerError, nil)
 		return
 	}
 
 	validation := validate(input).Errors
 	if len(validation) > 0 {
-		h.logger.Error("invalid payload", slog.Any("error", err))
+		h.logger.ErrorContext(ctx, "invalid payload", slog.Any("error", err))
 		ctx.JSON(http.StatusBadRequest, validation)
 		return
 	}
@@ -62,8 +62,8 @@ func (h *TransactionHandler) CreateTransaction(ctx *gin.Context) {
 		Amount:          input.Amount,
 	}
 
-	if err = h.transactionService.Create(transact); err != nil {
-		h.logger.Error("error creating transaction", slog.Any("error", err))
+	if err = h.transactionService.Create(ctx, transact); err != nil {
+		h.logger.ErrorContext(ctx, "error creating transaction", slog.Any("error", err))
 		if errors.Is(err, transaction.ErrOperationTypeNotFound) || errors.Is(err, transaction.ErrAccountNotFound) {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
@@ -77,6 +77,7 @@ func (h *TransactionHandler) CreateTransaction(ctx *gin.Context) {
 		return
 	}
 
+	h.logger.InfoContext(ctx, "transaction created successfully", slog.Any("transaction", transact))
 	ctx.JSON(http.StatusCreated, nil)
 	return
 }

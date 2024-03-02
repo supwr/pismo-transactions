@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"github.com/supwr/pismo-transactions/internal/entity"
 	"gorm.io/gorm"
@@ -19,7 +20,7 @@ func NewOperationTypeRepository(db *gorm.DB, logger *slog.Logger) *OperationType
 	}
 }
 
-func (o *OperationTypeRepository) FindById(id int) (*entity.OperationType, error) {
+func (o *OperationTypeRepository) FindById(ctx context.Context, id int) (*entity.OperationType, error) {
 	var operationType *entity.OperationType
 
 	if err := o.db.First(&operationType, "id = ? and deleted_at is null", id).Error; err != nil {
@@ -27,7 +28,7 @@ func (o *OperationTypeRepository) FindById(id int) (*entity.OperationType, error
 			return nil, nil
 		}
 
-		o.logger.Error("error finding transaction type", slog.Any("error", err))
+		o.logger.ErrorContext(ctx, "error finding transaction type", slog.Any("error", err))
 		return nil, err
 	}
 

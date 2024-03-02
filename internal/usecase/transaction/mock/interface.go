@@ -5,6 +5,7 @@
 package mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,15 +36,15 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 }
 
 // Create mocks base method.
-func (m *MockRepositoryInterface) Create(transaction *entity.Transaction) error {
+func (m *MockRepositoryInterface) Create(ctx context.Context, transaction *entity.Transaction) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", transaction)
+	ret := m.ctrl.Call(m, "Create", ctx, transaction)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockRepositoryInterfaceMockRecorder) Create(transaction interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) Create(ctx, transaction interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepositoryInterface)(nil).Create), transaction)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepositoryInterface)(nil).Create), ctx, transaction)
 }

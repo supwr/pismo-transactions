@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"context"
 	"github.com/supwr/pismo-transactions/internal/entity"
 	"github.com/supwr/pismo-transactions/internal/usecase/account"
 	"github.com/supwr/pismo-transactions/internal/usecase/operation_type"
@@ -19,10 +20,10 @@ func NewService(r RepositoryInterface, o *operation_type.Service, a *account.Ser
 	return &Service{repository: r, operationTypeService: o, accountService: a, clock: c}
 }
 
-func (s *Service) Create(t *entity.Transaction) error {
+func (s *Service) Create(ctx context.Context, t *entity.Transaction) error {
 	var negAmountTransactions = []int{entity.OperationTypeCashBuy, entity.OperationTypeInstallmentBuy, entity.OperationTypeWithdraw}
 
-	acc, err := s.accountService.FindById(t.AccountID)
+	acc, err := s.accountService.FindById(ctx, t.AccountID)
 	if err != nil {
 		return err
 	}
@@ -31,7 +32,7 @@ func (s *Service) Create(t *entity.Transaction) error {
 		return ErrAccountNotFound
 	}
 
-	operationType, err := s.operationTypeService.FindById(t.OperationTypeID)
+	operationType, err := s.operationTypeService.FindById(ctx, t.OperationTypeID)
 	if err != nil {
 		return err
 	}
@@ -48,5 +49,5 @@ func (s *Service) Create(t *entity.Transaction) error {
 
 	t.OperationDate = s.clock.Now()
 
-	return s.repository.Create(t)
+	return s.repository.Create(ctx, t)
 }

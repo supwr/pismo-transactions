@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"context"
 	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/shopspring/decimal"
@@ -23,6 +24,7 @@ func TestService_Create(t *testing.T) {
 		operationTypeRepo := operationtyperepo.NewMockRepositoryInterface(ctrl)
 		transactionRepo := transactionrepo.NewMockRepositoryInterface(ctrl)
 		clockMock := clockmock.NewMockClock(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:       1,
@@ -36,8 +38,8 @@ func TestService_Create(t *testing.T) {
 			Name: entity.Operations[operationCashBuy],
 		}
 
-		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
-		findOperationTypeById := operationTypeRepo.EXPECT().FindById(entity.OperationTypeCashBuy).Return(operationType, nil).Times(1).After(findAccountById)
+		findAccountById := accountRepo.EXPECT().FindById(ctx, 1).Return(account, nil).Times(1)
+		findOperationTypeById := operationTypeRepo.EXPECT().FindById(ctx, entity.OperationTypeCashBuy).Return(operationType, nil).Times(1).After(findAccountById)
 
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
@@ -48,13 +50,13 @@ func TestService_Create(t *testing.T) {
 		}
 
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findOperationTypeById)
-		transactionRepo.EXPECT().Create(transaction).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
 
 		accountService := accountservice.NewService(accountRepo)
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),
@@ -70,6 +72,7 @@ func TestService_Create(t *testing.T) {
 		operationTypeRepo := operationtyperepo.NewMockRepositoryInterface(ctrl)
 		transactionRepo := transactionrepo.NewMockRepositoryInterface(ctrl)
 		clockMock := clockmock.NewMockClock(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:       1,
@@ -83,8 +86,8 @@ func TestService_Create(t *testing.T) {
 			Name: entity.Operations[operationPayment],
 		}
 
-		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
-		findOperationTypeById := operationTypeRepo.EXPECT().FindById(entity.OperationTypePayment).Return(operationType, nil).Times(1).After(findAccountById)
+		findAccountById := accountRepo.EXPECT().FindById(ctx, 1).Return(account, nil).Times(1)
+		findOperationTypeById := operationTypeRepo.EXPECT().FindById(ctx, entity.OperationTypePayment).Return(operationType, nil).Times(1).After(findAccountById)
 
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
@@ -95,13 +98,13 @@ func TestService_Create(t *testing.T) {
 		}
 
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findOperationTypeById)
-		transactionRepo.EXPECT().Create(transaction).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
 
 		accountService := accountservice.NewService(accountRepo)
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),
@@ -119,6 +122,7 @@ func TestService_Create(t *testing.T) {
 		clockMock := clockmock.NewMockClock(ctrl)
 		expectedError := errors.New("database error")
 		transactionDate := time.Now()
+		ctx := context.Background()
 
 		transaction := &entity.Transaction{
 			AccountID:       1,
@@ -127,13 +131,13 @@ func TestService_Create(t *testing.T) {
 			OperationDate:   transactionDate,
 		}
 
-		accountRepo.EXPECT().FindById(1).Return(nil, expectedError).Times(1)
+		accountRepo.EXPECT().FindById(ctx, 1).Return(nil, expectedError).Times(1)
 
 		accountService := accountservice.NewService(accountRepo)
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),
@@ -150,6 +154,7 @@ func TestService_Create(t *testing.T) {
 		transactionRepo := transactionrepo.NewMockRepositoryInterface(ctrl)
 		clockMock := clockmock.NewMockClock(ctrl)
 		transactionDate := time.Now()
+		ctx := context.Background()
 
 		transaction := &entity.Transaction{
 			AccountID:       1,
@@ -158,13 +163,13 @@ func TestService_Create(t *testing.T) {
 			OperationDate:   transactionDate,
 		}
 
-		accountRepo.EXPECT().FindById(1).Return(nil, nil).Times(1)
+		accountRepo.EXPECT().FindById(ctx, 1).Return(nil, nil).Times(1)
 
 		accountService := accountservice.NewService(accountRepo)
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),
@@ -181,14 +186,15 @@ func TestService_Create(t *testing.T) {
 		transactionRepo := transactionrepo.NewMockRepositoryInterface(ctrl)
 		clockMock := clockmock.NewMockClock(ctrl)
 		expectedError := errors.New("database error")
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:       1,
 			Document: "123456",
 		}
 
-		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
-		operationTypeRepo.EXPECT().FindById(entity.OperationTypeCashBuy).Return(nil, expectedError).Times(1).After(findAccountById)
+		findAccountById := accountRepo.EXPECT().FindById(ctx, 1).Return(account, nil).Times(1)
+		operationTypeRepo.EXPECT().FindById(ctx, entity.OperationTypeCashBuy).Return(nil, expectedError).Times(1).After(findAccountById)
 
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
@@ -202,7 +208,7 @@ func TestService_Create(t *testing.T) {
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),
@@ -218,14 +224,15 @@ func TestService_Create(t *testing.T) {
 		operationTypeRepo := operationtyperepo.NewMockRepositoryInterface(ctrl)
 		transactionRepo := transactionrepo.NewMockRepositoryInterface(ctrl)
 		clockMock := clockmock.NewMockClock(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:       1,
 			Document: "123456",
 		}
 
-		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
-		operationTypeRepo.EXPECT().FindById(entity.OperationTypeCashBuy).Return(nil, nil).Times(1).After(findAccountById)
+		findAccountById := accountRepo.EXPECT().FindById(ctx, 1).Return(account, nil).Times(1)
+		operationTypeRepo.EXPECT().FindById(ctx, entity.OperationTypeCashBuy).Return(nil, nil).Times(1).After(findAccountById)
 
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
@@ -239,7 +246,7 @@ func TestService_Create(t *testing.T) {
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),
@@ -255,6 +262,7 @@ func TestService_Create(t *testing.T) {
 		operationTypeRepo := operationtyperepo.NewMockRepositoryInterface(ctrl)
 		transactionRepo := transactionrepo.NewMockRepositoryInterface(ctrl)
 		clockMock := clockmock.NewMockClock(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:       1,
@@ -268,8 +276,8 @@ func TestService_Create(t *testing.T) {
 			Name: entity.Operations[operationInstallmentBuy],
 		}
 
-		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
-		findOperationTypeById := operationTypeRepo.EXPECT().FindById(entity.OperationTypeInstallmentBuy).Return(operationType, nil).Times(1).After(findAccountById)
+		findAccountById := accountRepo.EXPECT().FindById(ctx, 1).Return(account, nil).Times(1)
+		findOperationTypeById := operationTypeRepo.EXPECT().FindById(ctx, entity.OperationTypeInstallmentBuy).Return(operationType, nil).Times(1).After(findAccountById)
 
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
@@ -280,13 +288,13 @@ func TestService_Create(t *testing.T) {
 		}
 
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findOperationTypeById)
-		transactionRepo.EXPECT().Create(transaction).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
 
 		accountService := accountservice.NewService(accountRepo)
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),
@@ -302,6 +310,7 @@ func TestService_Create(t *testing.T) {
 		operationTypeRepo := operationtyperepo.NewMockRepositoryInterface(ctrl)
 		transactionRepo := transactionrepo.NewMockRepositoryInterface(ctrl)
 		clockMock := clockmock.NewMockClock(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:       1,
@@ -315,8 +324,8 @@ func TestService_Create(t *testing.T) {
 			Name: entity.Operations[operationWithdraw],
 		}
 
-		findAccountById := accountRepo.EXPECT().FindById(1).Return(account, nil).Times(1)
-		findOperationTypeById := operationTypeRepo.EXPECT().FindById(entity.OperationTypeWithdraw).Return(operationType, nil).Times(1).After(findAccountById)
+		findAccountById := accountRepo.EXPECT().FindById(ctx, 1).Return(account, nil).Times(1)
+		findOperationTypeById := operationTypeRepo.EXPECT().FindById(ctx, entity.OperationTypeWithdraw).Return(operationType, nil).Times(1).After(findAccountById)
 
 		transactionDate := time.Now()
 		transaction := &entity.Transaction{
@@ -327,13 +336,13 @@ func TestService_Create(t *testing.T) {
 		}
 
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findOperationTypeById)
-		transactionRepo.EXPECT().Create(transaction).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
 
 		accountService := accountservice.NewService(accountRepo)
 		operationTypeService := operationtypeservice.NewService(operationTypeRepo)
 		transactionService := NewService(transactionRepo, operationTypeService, accountService, clockMock)
 
-		err := transactionService.Create(&entity.Transaction{
+		err := transactionService.Create(ctx, &entity.Transaction{
 			AccountID:       transaction.AccountID,
 			OperationTypeID: transaction.OperationTypeID,
 			Amount:          transaction.Amount.Abs(),

@@ -1,6 +1,7 @@
 package operation_type
 
 import (
+	"context"
 	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -13,16 +14,17 @@ func TestService_FindById(t *testing.T) {
 	t.Run("find by id successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
+		ctx := context.Background()
 
 		operationType := &entity.OperationType{
 			ID:   1,
 			Name: "COMPRA A VISTA",
 		}
 
-		repo.EXPECT().FindById(operationType.ID).Return(operationType, nil).Times(1)
+		repo.EXPECT().FindById(ctx, operationType.ID).Return(operationType, nil).Times(1)
 
 		service := NewService(repo)
-		o, err := service.FindById(operationType.ID)
+		o, err := service.FindById(ctx, operationType.ID)
 
 		assert.Equal(t, o, operationType)
 		assert.Nil(t, err)
@@ -32,11 +34,12 @@ func TestService_FindById(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
 		expectedError := errors.New("database error")
+		ctx := context.Background()
 
-		repo.EXPECT().FindById(1).Return(nil, expectedError).Times(1)
+		repo.EXPECT().FindById(ctx, 1).Return(nil, expectedError).Times(1)
 
 		service := NewService(repo)
-		o, err := service.FindById(1)
+		o, err := service.FindById(ctx, 1)
 
 		assert.ErrorIs(t, err, expectedError)
 		assert.Nil(t, o)

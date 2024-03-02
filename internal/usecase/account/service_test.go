@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -14,6 +15,7 @@ func TestService_FindById(t *testing.T) {
 	t.Run("find by id successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:        1,
@@ -21,10 +23,10 @@ func TestService_FindById(t *testing.T) {
 			CreatedAt: time.Now(),
 		}
 
-		repo.EXPECT().FindById(account.ID).Return(account, nil).Times(1)
+		repo.EXPECT().FindById(ctx, account.ID).Return(account, nil).Times(1)
 
 		service := NewService(repo)
-		a, err := service.FindById(account.ID)
+		a, err := service.FindById(ctx, account.ID)
 		assert.Equal(t, account, a)
 		assert.Nil(t, err)
 	})
@@ -32,11 +34,12 @@ func TestService_FindById(t *testing.T) {
 	t.Run("account not found", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
+		ctx := context.Background()
 
-		repo.EXPECT().FindById(1).Return(nil, nil).Times(1)
+		repo.EXPECT().FindById(ctx, 1).Return(nil, nil).Times(1)
 
 		service := NewService(repo)
-		a, err := service.FindById(1)
+		a, err := service.FindById(ctx, 1)
 		assert.Nil(t, a)
 		assert.Nil(t, err)
 	})
@@ -45,11 +48,12 @@ func TestService_FindById(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
 		expectedErr := errors.New("database error")
+		ctx := context.Background()
 
-		repo.EXPECT().FindById(1).Return(nil, expectedErr).Times(1)
+		repo.EXPECT().FindById(ctx, 1).Return(nil, expectedErr).Times(1)
 
 		service := NewService(repo)
-		a, err := service.FindById(1)
+		a, err := service.FindById(ctx, 1)
 		assert.Nil(t, a)
 		assert.ErrorIs(t, err, expectedErr)
 	})
@@ -59,6 +63,7 @@ func TestService_FindByDocument(t *testing.T) {
 	t.Run("find by document successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:        1,
@@ -66,10 +71,10 @@ func TestService_FindByDocument(t *testing.T) {
 			CreatedAt: time.Now(),
 		}
 
-		repo.EXPECT().FindByDocument(account.Document).Return(account, nil).Times(1)
+		repo.EXPECT().FindByDocument(ctx, account.Document).Return(account, nil).Times(1)
 
 		service := NewService(repo)
-		a, err := service.FindByDocument(account.Document)
+		a, err := service.FindByDocument(ctx, account.Document)
 		assert.Equal(t, account, a)
 		assert.Nil(t, err)
 	})
@@ -78,11 +83,12 @@ func TestService_FindByDocument(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
 		document := entity.Document("123456")
+		ctx := context.Background()
 
-		repo.EXPECT().FindByDocument(document).Return(nil, nil).Times(1)
+		repo.EXPECT().FindByDocument(ctx, document).Return(nil, nil).Times(1)
 
 		service := NewService(repo)
-		a, err := service.FindByDocument(document)
+		a, err := service.FindByDocument(ctx, document)
 		assert.Nil(t, a)
 		assert.Nil(t, err)
 	})
@@ -92,11 +98,12 @@ func TestService_FindByDocument(t *testing.T) {
 		repo := mock.NewMockRepositoryInterface(ctrl)
 		document := entity.Document("123456")
 		expectedErr := errors.New("database error")
+		ctx := context.Background()
 
-		repo.EXPECT().FindByDocument(document).Return(nil, expectedErr).Times(1)
+		repo.EXPECT().FindByDocument(ctx, document).Return(nil, expectedErr).Times(1)
 
 		service := NewService(repo)
-		a, err := service.FindByDocument(document)
+		a, err := service.FindByDocument(ctx, document)
 		assert.Nil(t, a)
 		assert.ErrorIs(t, err, expectedErr)
 	})
@@ -106,6 +113,7 @@ func TestService_Create(t *testing.T) {
 	t.Run("create account successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:        1,
@@ -113,11 +121,11 @@ func TestService_Create(t *testing.T) {
 			CreatedAt: time.Now(),
 		}
 
-		findByDocument := repo.EXPECT().FindByDocument(account.Document).Return(nil, nil).Times(1)
-		repo.EXPECT().Create(account).Return(nil).Times(1).After(findByDocument)
+		findByDocument := repo.EXPECT().FindByDocument(ctx, account.Document).Return(nil, nil).Times(1)
+		repo.EXPECT().Create(ctx, account).Return(nil).Times(1).After(findByDocument)
 
 		service := NewService(repo)
-		err := service.Create(account)
+		err := service.Create(ctx, account)
 		assert.Nil(t, err)
 	})
 
@@ -125,6 +133,7 @@ func TestService_Create(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
 		expectedErr := errors.New("database error")
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:        1,
@@ -132,16 +141,17 @@ func TestService_Create(t *testing.T) {
 			CreatedAt: time.Now(),
 		}
 
-		repo.EXPECT().FindByDocument(account.Document).Return(nil, expectedErr).Times(1)
+		repo.EXPECT().FindByDocument(ctx, account.Document).Return(nil, expectedErr).Times(1)
 
 		service := NewService(repo)
-		err := service.Create(account)
+		err := service.Create(ctx, account)
 		assert.ErrorIs(t, err, expectedErr)
 	})
 
 	t.Run("account already exists error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:        1,
@@ -149,10 +159,10 @@ func TestService_Create(t *testing.T) {
 			CreatedAt: time.Now(),
 		}
 
-		repo.EXPECT().FindByDocument(account.Document).Return(account, nil).Times(1)
+		repo.EXPECT().FindByDocument(ctx, account.Document).Return(account, nil).Times(1)
 
 		service := NewService(repo)
-		err := service.Create(account)
+		err := service.Create(ctx, account)
 		assert.ErrorIs(t, err, ErrAccountAlreadyExists)
 	})
 
@@ -160,6 +170,7 @@ func TestService_Create(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepositoryInterface(ctrl)
 		expectedErr := errors.New("database error")
+		ctx := context.Background()
 
 		account := &entity.Account{
 			ID:        1,
@@ -167,11 +178,11 @@ func TestService_Create(t *testing.T) {
 			CreatedAt: time.Now(),
 		}
 
-		findByDocument := repo.EXPECT().FindByDocument(account.Document).Return(nil, nil).Times(1)
-		repo.EXPECT().Create(account).Return(expectedErr).Times(1).After(findByDocument)
+		findByDocument := repo.EXPECT().FindByDocument(ctx, account.Document).Return(nil, nil).Times(1)
+		repo.EXPECT().Create(ctx, account).Return(expectedErr).Times(1).After(findByDocument)
 
 		service := NewService(repo)
-		err := service.Create(account)
+		err := service.Create(ctx, account)
 		assert.ErrorIs(t, err, expectedErr)
 	})
 }

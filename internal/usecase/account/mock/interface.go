@@ -5,6 +5,7 @@
 package mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,45 +36,45 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 }
 
 // Create mocks base method.
-func (m *MockRepositoryInterface) Create(account *entity.Account) error {
+func (m *MockRepositoryInterface) Create(ctx context.Context, account *entity.Account) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", account)
+	ret := m.ctrl.Call(m, "Create", ctx, account)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockRepositoryInterfaceMockRecorder) Create(account interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) Create(ctx, account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepositoryInterface)(nil).Create), account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepositoryInterface)(nil).Create), ctx, account)
 }
 
 // FindByDocument mocks base method.
-func (m *MockRepositoryInterface) FindByDocument(document entity.Document) (*entity.Account, error) {
+func (m *MockRepositoryInterface) FindByDocument(ctx context.Context, document entity.Document) (*entity.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByDocument", document)
+	ret := m.ctrl.Call(m, "FindByDocument", ctx, document)
 	ret0, _ := ret[0].(*entity.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByDocument indicates an expected call of FindByDocument.
-func (mr *MockRepositoryInterfaceMockRecorder) FindByDocument(document interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) FindByDocument(ctx, document interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByDocument", reflect.TypeOf((*MockRepositoryInterface)(nil).FindByDocument), document)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByDocument", reflect.TypeOf((*MockRepositoryInterface)(nil).FindByDocument), ctx, document)
 }
 
 // FindById mocks base method.
-func (m *MockRepositoryInterface) FindById(id int) (*entity.Account, error) {
+func (m *MockRepositoryInterface) FindById(ctx context.Context, id int) (*entity.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindById", id)
+	ret := m.ctrl.Call(m, "FindById", ctx, id)
 	ret0, _ := ret[0].(*entity.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindById indicates an expected call of FindById.
-func (mr *MockRepositoryInterfaceMockRecorder) FindById(id interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) FindById(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepositoryInterface)(nil).FindById), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepositoryInterface)(nil).FindById), ctx, id)
 }

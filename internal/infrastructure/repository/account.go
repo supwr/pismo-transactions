@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"github.com/supwr/pismo-transactions/internal/entity"
 	"gorm.io/gorm"
@@ -19,11 +20,11 @@ func NewAccountRepository(db *gorm.DB, logger *slog.Logger) *AccountRepository {
 	}
 }
 
-func (r *AccountRepository) Create(account *entity.Account) error {
+func (r *AccountRepository) Create(ctx context.Context, account *entity.Account) error {
 	return r.db.Create(account).Error
 }
 
-func (r *AccountRepository) FindById(id int) (*entity.Account, error) {
+func (r *AccountRepository) FindById(ctx context.Context, id int) (*entity.Account, error) {
 	var account *entity.Account
 
 	if err := r.db.First(&account, "id = ? and deleted_at is null", id).Error; err != nil {
@@ -31,14 +32,14 @@ func (r *AccountRepository) FindById(id int) (*entity.Account, error) {
 			return nil, nil
 		}
 
-		r.logger.Error("error finding account", slog.Any("error", err))
+		r.logger.ErrorContext(ctx, "error finding account", slog.Any("error", err))
 		return nil, err
 	}
 
 	return account, nil
 }
 
-func (r *AccountRepository) FindByDocument(document entity.Document) (*entity.Account, error) {
+func (r *AccountRepository) FindByDocument(ctx context.Context, document entity.Document) (*entity.Account, error) {
 	var account *entity.Account
 
 	if err := r.db.First(&account, "document = ? and deleted_at is null", document).Error; err != nil {
@@ -46,7 +47,7 @@ func (r *AccountRepository) FindByDocument(document entity.Document) (*entity.Ac
 			return nil, nil
 		}
 
-		r.logger.Error("error finding account", slog.Any("error", err))
+		r.logger.ErrorContext(ctx, "error finding account", slog.Any("error", err))
 		return nil, err
 	}
 

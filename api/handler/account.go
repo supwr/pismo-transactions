@@ -47,22 +47,22 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 	var input AccountInputDTO
 
 	if err = ctx.BindJSON(&input); err != nil {
-		h.logger.Error("error reading body", slog.Any("error", err))
+		h.logger.ErrorContext(ctx, "error reading body", slog.Any("error", err))
 		ctx.JSON(http.StatusInternalServerError, nil)
 		return
 	}
 
 	validation := validate(input).Errors
 	if len(validation) > 0 {
-		h.logger.Error("invalid payload", slog.Any("error", err))
+		h.logger.ErrorContext(ctx, "invalid payload", slog.Any("error", err))
 		ctx.JSON(http.StatusBadRequest, validation)
 		return
 	}
 
 	acc := &entity.Account{Document: input.DocumentNumber}
 
-	if err = h.AccountService.Create(acc); err != nil {
-		h.logger.Error("error creating account", slog.Any("error", err))
+	if err = h.AccountService.Create(ctx, acc); err != nil {
+		h.logger.ErrorContext(ctx, "error creating account", slog.Any("error", err))
 		if errors.Is(err, account.ErrAccountAlreadyExists) {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
@@ -76,6 +76,7 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 		return
 	}
 
+	h.logger.InfoContext(ctx, "account created successfully", slog.Any("account", acc))
 	ctx.JSON(http.StatusCreated, nil)
 	return
 }
@@ -93,6 +94,7 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 func (h *AccountHandler) GetAccountById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("accountId"))
 	if err != nil {
+		h.logger.ErrorContext(ctx, "error getting account id", slog.Any("error", err))
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
@@ -100,8 +102,9 @@ func (h *AccountHandler) GetAccountById(ctx *gin.Context) {
 		return
 	}
 
-	acc, err := h.AccountService.FindById(id)
+	acc, err := h.AccountService.FindById(ctx, id)
 	if err != nil {
+		h.logger.ErrorContext(ctx, "error finding account by id", slog.Any("error", err))
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -109,10 +112,12 @@ func (h *AccountHandler) GetAccountById(ctx *gin.Context) {
 	}
 
 	if acc == nil {
+		h.logger.ErrorContext(ctx, "account not found")
 		ctx.JSON(http.StatusNotFound, nil)
 		return
 	}
 
+	h.logger.InfoContext(ctx, "account found successfully", slog.Any("account", acc))
 	ctx.JSON(http.StatusOK, AccountOutputDTO{
 		AccountID:      acc.ID,
 		DocumentNumber: acc.Document,

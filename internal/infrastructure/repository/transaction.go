@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"github.com/supwr/pismo-transactions/internal/entity"
 	"gorm.io/gorm"
 	"log/slog"
@@ -18,6 +19,6 @@ func NewTransactionRepository(db *gorm.DB, logger *slog.Logger) *TransactionRepo
 	}
 }
 
-func (t *TransactionRepository) Create(transaction *entity.Transaction) error {
+func (t *TransactionRepository) Create(ctx context.Context, transaction *entity.Transaction) error {
 	return t.db.Create(transaction).Error
 }

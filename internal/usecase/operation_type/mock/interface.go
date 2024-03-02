@@ -5,6 +5,7 @@
 package mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,16 +36,16 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 }
 
 // FindById mocks base method.
-func (m *MockRepositoryInterface) FindById(id int) (*entity.OperationType, error) {
+func (m *MockRepositoryInterface) FindById(ctx context.Context, id int) (*entity.OperationType, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindById", id)
+	ret := m.ctrl.Call(m, "FindById", ctx, id)
 	ret0, _ := ret[0].(*entity.OperationType)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindById indicates an expected call of FindById.
-func (mr *MockRepositoryInterfaceMockRecorder) FindById(id interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) FindById(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepositoryInterface)(nil).FindById), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockRepositoryInterface)(nil).FindById), ctx, id)
 }
