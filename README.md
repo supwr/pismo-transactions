@@ -17,17 +17,18 @@ make app.setup
 ```
 
 ### Step 3
-Execute migration
-
-```sh 
-make migrate
-```
-
-### Step 4
 Start db container
 
 ```sh 
 make db.up
+```
+
+
+### Step 4
+Execute migration
+
+```sh 
+make migrate
 ```
 
 ### Step 5
