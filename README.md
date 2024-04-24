@@ -77,18 +77,12 @@ As a dependency injection solution, the project uses **[uber-fx](https://github.
 ├── cmd
 ├── docs
 ├── internal
-│   ├── config
-│   ├── entity
-│   ├── infrastructure
-│   │   ├── database
-│   │   ├── repository
-│   ├── usecase
-│   │   ├── account
-│   │   ├── operation_type
-│   │   ├── transaction
+│   ├── account
+│   ├── transaction
 ├── migrations
 ├── pkg
 │   ├── clock
+│   ├── database
 ├── .env.example
 ├── .gitignore
 ├── build.sh
