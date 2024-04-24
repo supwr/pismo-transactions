@@ -1,0 +1,1 @@
+ALTER TABLE sc_pismo.accounts ADD COLUMN available_credit_limit DECIMAL(10,2);

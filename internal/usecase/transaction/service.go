@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"context"
+	"github.com/shopspring/decimal"
 	"github.com/supwr/pismo-transactions/internal/entity"
 	"github.com/supwr/pismo-transactions/internal/usecase/account"
 	"github.com/supwr/pismo-transactions/internal/usecase/operation_type"
@@ -43,11 +44,21 @@ func (s *Service) Create(ctx context.Context, t *entity.Transaction) error {
 
 	if slices.Contains(negAmountTransactions, t.OperationTypeID) {
 		t.Amount = t.Amount.Abs().Neg()
+
+		if acc.AvailableCreditLimit.Add(t.Amount).LessThan(decimal.Zero) {
+			return ErrInsuficientFunds
+		}
 	} else {
 		t.Amount = t.Amount.Abs()
 	}
 
 	t.OperationDate = s.clock.Now()
+
+	acc.AvailableCreditLimit = acc.AvailableCreditLimit.Add(t.Amount)
+
+	if err = s.accountService.UpdateCreditLimit(ctx, acc); err != nil {
+		return err
+	}
 
 	return s.repository.Create(ctx, t)
 }

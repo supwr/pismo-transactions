@@ -39,6 +39,11 @@ func (r *AccountRepository) FindById(ctx context.Context, id int) (*entity.Accou
 	return account, nil
 }
 
+func (r *AccountRepository) UpdateAvailableLimit(ctx context.Context, account *entity.Account) error {
+	var acc *entity.Account
+	return r.db.Model(&acc).Where("id = ?", account.ID).Update("available_credit_limit", account.AvailableCreditLimit).Error
+}
+
 func (r *AccountRepository) FindByDocument(ctx context.Context, document entity.Document) (*entity.Account, error) {
 	var account *entity.Account
 

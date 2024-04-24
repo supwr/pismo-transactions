@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 	"github.com/supwr/pismo-transactions/internal/entity"
 	"github.com/supwr/pismo-transactions/internal/usecase/account"
 	"log/slog"
@@ -11,12 +12,14 @@ import (
 )
 
 type AccountInputDTO struct {
-	DocumentNumber entity.Document `json:"document_number" swaggertype:"string" validate:"required"`
+	DocumentNumber       entity.Document `json:"document_number" swaggertype:"string" validate:"required"`
+	AvailableCreditLimit decimal.Decimal `json:"available_credit_limit" validate:"required"`
 }
 
 type AccountOutputDTO struct {
-	AccountID      int             `json:"account_id"`
-	DocumentNumber entity.Document `json:"document_number" swaggertype:"string"`
+	AccountID            int             `json:"account_id"`
+	DocumentNumber       entity.Document `json:"document_number" swaggertype:"string"`
+	AvailableCreditLimit decimal.Decimal `json:"available_credit_limit"`
 }
 
 type AccountHandler struct {
@@ -59,7 +62,14 @@ func (h *AccountHandler) CreateAccount(ctx *gin.Context) {
 		return
 	}
 
-	acc := &entity.Account{Document: input.DocumentNumber}
+	if input.AvailableCreditLimit.LessThan(decimal.Zero) {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	acc := &entity.Account{Document: input.DocumentNumber, AvailableCreditLimit: input.AvailableCreditLimit}
 
 	if err = h.AccountService.Create(ctx, acc); err != nil {
 		h.logger.ErrorContext(ctx, "error creating account", slog.Any("error", err))
@@ -119,7 +129,8 @@ func (h *AccountHandler) GetAccountById(ctx *gin.Context) {
 
 	h.logger.InfoContext(ctx, "account found successfully", slog.Any("account", acc))
 	ctx.JSON(http.StatusOK, AccountOutputDTO{
-		AccountID:      acc.ID,
-		DocumentNumber: acc.Document,
+		AccountID:            acc.ID,
+		DocumentNumber:       acc.Document,
+		AvailableCreditLimit: acc.AvailableCreditLimit,
 	})
 }

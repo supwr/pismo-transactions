@@ -21,6 +21,10 @@ func (s *Service) FindByDocument(ctx context.Context, document entity.Document) 
 	return s.repository.FindByDocument(ctx, document)
 }
 
+func (s *Service) UpdateCreditLimit(ctx context.Context, account *entity.Account) error {
+	return s.repository.UpdateAvailableLimit(ctx, account)
+}
+
 func (s *Service) Create(ctx context.Context, account *entity.Account) error {
 	exists, err := s.repository.FindByDocument(ctx, account.Document)
 	if err != nil {
