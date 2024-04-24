@@ -4,8 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
-	"github.com/supwr/pismo-transactions/internal/entity"
-	"github.com/supwr/pismo-transactions/internal/usecase/transaction"
+	"github.com/supwr/pismo-transactions/internal/transaction"
 	"log/slog"
 	"net/http"
 )
@@ -56,7 +55,7 @@ func (h *TransactionHandler) CreateTransaction(ctx *gin.Context) {
 		return
 	}
 
-	transact := &entity.Transaction{
+	transact := &transaction.Transaction{
 		AccountID:       input.AccountId,
 		OperationTypeID: input.OperationTypeId,
 		Amount:          input.Amount,

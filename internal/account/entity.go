@@ -1,4 +1,4 @@
-package entity
+package account
 
 import (
 	"github.com/shopspring/decimal"

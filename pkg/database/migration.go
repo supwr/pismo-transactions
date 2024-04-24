@@ -6,21 +6,19 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/lib/pq"
-	"github.com/supwr/pismo-transactions/internal/config"
-
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 	"log/slog"
 )
 
 type Migration struct {
-	cfg    config.Config
+	cfg    Config
 	db     *gorm.DB
 	logger *slog.Logger
 }
 
-func NewMigration(db *gorm.DB, cfg config.Config, log *slog.Logger) *Migration {
+func NewMigration(db *gorm.DB, cfg Config, log *slog.Logger) *Migration {
 	return &Migration{
 		db:     db,
 		cfg:    cfg,

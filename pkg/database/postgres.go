@@ -2,14 +2,13 @@ package database
 
 import (
 	"fmt"
-	"github.com/supwr/pismo-transactions/internal/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
-func NewConnection(cfg config.Config) (*gorm.DB, error) {
+func NewConnection(cfg Config) (*gorm.DB, error) {
 	var err error
 	var conn *gorm.DB
 
