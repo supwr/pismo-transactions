@@ -38,8 +38,12 @@ func TestService_Create(t *testing.T) {
 			OperationDate:   transactionDate,
 		}
 
+		updatedAccount := *acc
+		updatedAccount.AvailableCreditLimit = updatedAccount.AvailableCreditLimit.Add(transaction.Amount)
+
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findAccountById)
-		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
+		updateAccount := accountRepo.EXPECT().UpdateAvailableLimit(ctx, &updatedAccount).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1).After(updateAccount)
 
 		accountService := account.NewService(accountRepo)
 		transactionService := NewService(transactionRepo, accountService, clockMock)
@@ -78,7 +82,11 @@ func TestService_Create(t *testing.T) {
 		}
 
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findAccountById)
-		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
+
+		updatedAccount := *acc
+		updatedAccount.AvailableCreditLimit = updatedAccount.AvailableCreditLimit.Add(transaction.Amount)
+		updateAccount := accountRepo.EXPECT().UpdateAvailableLimit(ctx, &updatedAccount).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1).After(updateAccount)
 
 		accountService := account.NewService(accountRepo)
 		transactionService := NewService(transactionRepo, accountService, clockMock)
@@ -154,43 +162,6 @@ func TestService_Create(t *testing.T) {
 		assert.ErrorIs(t, err, ErrAccountNotFound)
 	})
 
-	t.Run("find operation type error", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		accountRepo := account.NewMockRepositoryInterface(ctrl)
-		transactionRepo := NewMockRepositoryInterface(ctrl)
-		clockMock := clockmock.NewMockClock(ctrl)
-		expectedError := errors.New("database error")
-		ctx := context.Background()
-
-		acc := &account.Account{
-			ID:                   1,
-			Document:             "123456",
-			AvailableCreditLimit: decimal.NewFromInt(1000),
-		}
-
-		accountRepo.EXPECT().FindById(ctx, 1).Return(acc, nil).Times(1)
-
-		transactionDate := time.Now()
-		transaction := &Transaction{
-			AccountID:       1,
-			OperationTypeID: OperationTypeCashBuy,
-			Amount:          decimal.NewFromFloat(float64(123.45)).Neg(),
-			OperationDate:   transactionDate,
-		}
-
-		accountService := account.NewService(accountRepo)
-		transactionService := NewService(transactionRepo, accountService, clockMock)
-
-		err := transactionService.Create(ctx, &Transaction{
-			AccountID:       transaction.AccountID,
-			OperationTypeID: transaction.OperationTypeID,
-			Amount:          transaction.Amount.Abs(),
-			OperationDate:   transactionDate,
-		})
-
-		assert.ErrorIs(t, err, expectedError)
-	})
-
 	t.Run("operation type not found error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		accountRepo := account.NewMockRepositoryInterface(ctrl)
@@ -209,7 +180,7 @@ func TestService_Create(t *testing.T) {
 		transactionDate := time.Now()
 		transaction := &Transaction{
 			AccountID:       1,
-			OperationTypeID: OperationTypeCashBuy,
+			OperationTypeID: 15,
 			Amount:          decimal.NewFromFloat(float64(123.45)).Neg(),
 			OperationDate:   transactionDate,
 		}
@@ -251,7 +222,12 @@ func TestService_Create(t *testing.T) {
 		}
 
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findAccountById)
-		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
+
+		updatedAccount := *acc
+		updatedAccount.AvailableCreditLimit = updatedAccount.AvailableCreditLimit.Add(transaction.Amount)
+
+		updateAccount := accountRepo.EXPECT().UpdateAvailableLimit(ctx, &updatedAccount).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1).After(updateAccount)
 
 		accountService := account.NewService(accountRepo)
 		transactionService := NewService(transactionRepo, accountService, clockMock)
@@ -290,7 +266,12 @@ func TestService_Create(t *testing.T) {
 		}
 
 		clock := clockMock.EXPECT().Now().Return(transactionDate).Times(1).After(findAccountById)
-		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1)
+
+		updatedAccount := *acc
+		updatedAccount.AvailableCreditLimit = updatedAccount.AvailableCreditLimit.Add(transaction.Amount)
+
+		updateAccount := accountRepo.EXPECT().UpdateAvailableLimit(ctx, &updatedAccount).Return(nil).After(clock).Times(1)
+		transactionRepo.EXPECT().Create(ctx, transaction).Return(nil).After(clock).Times(1).After(updateAccount)
 
 		accountService := account.NewService(accountRepo)
 		transactionService := NewService(transactionRepo, accountService, clockMock)
