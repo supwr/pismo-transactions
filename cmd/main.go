@@ -2,8 +2,7 @@ package main
 
 import (
 	"github.com/shopspring/decimal"
-	"github.com/supwr/pismo-transactions/internal/config"
-	"github.com/supwr/pismo-transactions/internal/infrastructure/database"
+	"github.com/supwr/pismo-transactions/pkg/database"
 	"go.uber.org/fx"
 )
 
@@ -13,7 +12,7 @@ func main() {
 	decimal.MarshalJSONWithoutQuotes = true
 
 	app := createApp(
-		fx.Invoke(func(cfg config.Config, migration *database.Migration) {
+		fx.Invoke(func(cfg database.Config, migration *database.Migration) {
 			if cfg.Environment == devEnv {
 				migration.CreateSchema()
 				migration.Migrate()

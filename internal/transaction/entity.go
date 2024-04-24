@@ -1,8 +1,15 @@
-package entity
+package transaction
 
 import (
 	"github.com/shopspring/decimal"
 	"time"
+)
+
+const (
+	OperationTypeCashBuy = iota + 1
+	OperationTypeInstallmentBuy
+	OperationTypeWithdraw
+	OperationTypePayment
 )
 
 type Transaction struct {
@@ -14,4 +21,11 @@ type Transaction struct {
 	CreatedAt       time.Time       `json:"created_at"`
 	UpdatedAt       *time.Time      `json:"updated_at"`
 	DeletedAt       *time.Time      `json:"deleted_at"`
+}
+
+var Operations = map[int]string{
+	OperationTypeCashBuy:        "COMPRA A VISTA",
+	OperationTypeInstallmentBuy: "COMPRA PARCELADA",
+	OperationTypeWithdraw:       "SAQUE",
+	OperationTypePayment:        "PAGAMENTO",
 }

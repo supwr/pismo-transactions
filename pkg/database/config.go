@@ -1,8 +1,6 @@
-package config
+package database
 
-import (
-	"github.com/kelseyhightower/envconfig"
-)
+import "github.com/kelseyhightower/envconfig"
 
 type Config struct {
 	Environment      string `envconfig:"env"`

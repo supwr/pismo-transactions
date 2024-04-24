@@ -5,8 +5,6 @@ import (
 	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/supwr/pismo-transactions/internal/entity"
-	"github.com/supwr/pismo-transactions/internal/usecase/account/mock"
 	"testing"
 	"time"
 )
@@ -14,10 +12,10 @@ import (
 func TestService_FindById(t *testing.T) {
 	t.Run("find by id successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		ctx := context.Background()
 
-		account := &entity.Account{
+		account := &Account{
 			ID:        1,
 			Document:  "123456",
 			CreatedAt: time.Now(),
@@ -33,7 +31,7 @@ func TestService_FindById(t *testing.T) {
 
 	t.Run("account not found", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		ctx := context.Background()
 
 		repo.EXPECT().FindById(ctx, 1).Return(nil, nil).Times(1)
@@ -46,7 +44,7 @@ func TestService_FindById(t *testing.T) {
 
 	t.Run("error finding account by id", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		expectedErr := errors.New("database error")
 		ctx := context.Background()
 
@@ -62,10 +60,10 @@ func TestService_FindById(t *testing.T) {
 func TestService_FindByDocument(t *testing.T) {
 	t.Run("find by document successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		ctx := context.Background()
 
-		account := &entity.Account{
+		account := &Account{
 			ID:        1,
 			Document:  "123456",
 			CreatedAt: time.Now(),
@@ -81,8 +79,8 @@ func TestService_FindByDocument(t *testing.T) {
 
 	t.Run("account not found", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
-		document := entity.Document("123456")
+		repo := NewMockRepositoryInterface(ctrl)
+		document := Document("123456")
 		ctx := context.Background()
 
 		repo.EXPECT().FindByDocument(ctx, document).Return(nil, nil).Times(1)
@@ -95,8 +93,8 @@ func TestService_FindByDocument(t *testing.T) {
 
 	t.Run("error finding account by id", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
-		document := entity.Document("123456")
+		repo := NewMockRepositoryInterface(ctrl)
+		document := Document("123456")
 		expectedErr := errors.New("database error")
 		ctx := context.Background()
 
@@ -112,10 +110,10 @@ func TestService_FindByDocument(t *testing.T) {
 func TestService_Create(t *testing.T) {
 	t.Run("create account successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		ctx := context.Background()
 
-		account := &entity.Account{
+		account := &Account{
 			ID:        1,
 			Document:  "123456",
 			CreatedAt: time.Now(),
@@ -131,11 +129,11 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("error finding account", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		expectedErr := errors.New("database error")
 		ctx := context.Background()
 
-		account := &entity.Account{
+		account := &Account{
 			ID:        1,
 			Document:  "123456",
 			CreatedAt: time.Now(),
@@ -150,10 +148,10 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("account already exists error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		ctx := context.Background()
 
-		account := &entity.Account{
+		account := &Account{
 			ID:        1,
 			Document:  "123456",
 			CreatedAt: time.Now(),
@@ -168,11 +166,11 @@ func TestService_Create(t *testing.T) {
 
 	t.Run("error creating account", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		repo := mock.NewMockRepositoryInterface(ctrl)
+		repo := NewMockRepositoryInterface(ctrl)
 		expectedErr := errors.New("database error")
 		ctx := context.Background()
 
-		account := &entity.Account{
+		account := &Account{
 			ID:        1,
 			Document:  "123456",
 			CreatedAt: time.Now(),
