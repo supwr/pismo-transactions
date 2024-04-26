@@ -1,15 +1,20 @@
 definitions:
   handler.AccountInputDTO:
     properties:
+      available_credit_limit:
+        type: number
       document_number:
         type: string
     required:
+    - available_credit_limit
     - document_number
     type: object
   handler.AccountOutputDTO:
     properties:
       account_id:
         type: integer
+      available_credit_limit:
+        type: number
       document_number:
         type: string
     type: object

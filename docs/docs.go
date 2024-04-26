@@ -129,9 +129,13 @@ const docTemplate = `{
         "handler.AccountInputDTO": {
             "type": "object",
             "required": [
+                "available_credit_limit",
                 "document_number"
             ],
             "properties": {
+                "available_credit_limit": {
+                    "type": "number"
+                },
                 "document_number": {
                     "type": "string"
                 }
@@ -142,6 +146,9 @@ const docTemplate = `{
             "properties": {
                 "account_id": {
                     "type": "integer"
+                },
+                "available_credit_limit": {
+                    "type": "number"
                 },
                 "document_number": {
                     "type": "string"

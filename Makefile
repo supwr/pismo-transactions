@@ -24,7 +24,7 @@ generate:
 	docker run --rm -v .:/app pismo-transactions-app go generate ./...
 
 test:
-	docker run --rm -v .:/app pismo-transactions-app go test `go list ./... | grep -v mock`
+	docker run --network pismo_transactions -it --rm -v $$PWD:$$PWD -w $$PWD -v /var/run/docker.sock:/var/run/docker.sock pismo-transactions-app go test `go list ./... | grep -v mock`
 
 test-coverage:
-	docker run --rm -v .:/app pismo-transactions-app go test `go list ./... | grep -v mock` -coverprofile cover.out  && go tool cover -html=cover.out
+	docker run --network pismo_transactions -it --rm -v $$PWD:$$PWD -w $$PWD -v /var/run/docker.sock:/var/run/docker.sock pismo-transactions-app go test `go list ./... | grep -v mock` -coverprofile cover.out  && go tool cover -html=cover.out

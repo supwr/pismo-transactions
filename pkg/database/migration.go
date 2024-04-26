@@ -33,7 +33,7 @@ func (m *Migration) CreateSchema() {
 func (m *Migration) Migrate() {
 	var err error
 
-	migration, err := m.getMigrationInstance("migrations/")
+	migration, err := m.getMigrationInstance()
 	if err != nil {
 		m.logger.Error("error creating migration instance", slog.Any("error", err))
 	}
@@ -44,14 +44,14 @@ func (m *Migration) Migrate() {
 	}
 }
 
-func (m *Migration) getMigrationInstance(dir string) (*migrate.Migrate, error) {
+func (m *Migration) getMigrationInstance() (*migrate.Migrate, error) {
 	driver, err := m.getDriver()
 
 	if err != nil {
 		return nil, err
 	}
 
-	return migrate.NewWithDatabaseInstance(fmt.Sprintf("file://%s", dir), m.cfg.DatabaseDBName, driver)
+	return migrate.NewWithDatabaseInstance(fmt.Sprintf("file://%s", m.cfg.MigrationsDir), m.cfg.DatabaseDBName, driver)
 }
 
 func (m *Migration) getDriver() (database.Driver, error) {
